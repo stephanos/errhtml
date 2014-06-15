@@ -37,7 +37,7 @@ type envConf struct {
 }
 
 type Source struct {
-	*source
+	source *source
 }
 
 type source struct {
