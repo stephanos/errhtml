@@ -83,7 +83,7 @@ func NewError(err interface{}, sources ...Source) error {
 func (e *errContext) Error() string {
 	loc := ""
 	source := e.Source
-	if source.File != "" {
+	if source != nil && source.File != "" {
 		line := ""
 		if source.Line != 0 {
 			line = fmt.Sprintf(":%d", source.Line)
@@ -155,7 +155,6 @@ func getStackTrace() (stackTrace []source) {
 	fullStackTrace := strings.Split(string(debug.Stack()), "\n")
 	for i, elem := range fullStackTrace {
 		elem = strings.TrimSpace(elem)
-		//println(elemStr)
 
 		if i%2 == 0 {
 			file, line := fileContextFromStackElement(elem)

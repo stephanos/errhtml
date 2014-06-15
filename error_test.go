@@ -19,6 +19,8 @@ var _ = Describe("Error", func() {
 			Check(err.Message, Equals, "open nonsense: no such file or directory")
 
 			Check(err.SourceTrace, HasLen, 0)
+
+			Check(err.Error(), Equals, "Error: open nonsense: no such file or directory")
 		})
 
 		It("from template error", func() {
@@ -32,6 +34,8 @@ var _ = Describe("Error", func() {
 
 			Check(err.SourceTrace, HasLen, 0)
 			Check(err.SourceContext, HasLen, 7)
+
+			Check(err.Error(), Equals, `Error (in fixture_tmpl.html:5): template: fixture_tmpl.html:5: function "undefined_action" not defined`)
 		})
 
 		It("from panic", func() {
@@ -54,6 +58,8 @@ var _ = Describe("Error", func() {
 
 			lastFrame := stackTrace[len(stackTrace)-1]
 			Check(lastFrame.File, HasSuffix, "runtime/proc.c")
+
+			Check(err.Error(), Equals, `Panic (in <GOPATH>/github.com/101loops/errhtml/fixture_test.go:15): runtime error: integer divide by zero`)
 		})
 
 		It("from other Error", func() {
