@@ -62,6 +62,16 @@ var _ = Describe("Error", func() {
 
 			Check(err1.Message, Equals, err2.Message)
 		})
+
+		It("from template error with missing file", func() {
+			err, _ := NewError(templateErr(), NewFileSource("nonsense.html", 10)).(*Error)
+			Check(err, NotNil)
+			Check(err.MetaError, Contains, `unable to load error source "nonsense.html"`)
+		})
+
+		It("from nil", func() {
+			Check(NewError(nil), IsNil)
+		})
 	})
 
 	Context("render", func() {

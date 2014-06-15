@@ -108,8 +108,11 @@ func sourceContext(src *source) ([]source, error) {
 	}
 
 	lines, err := src.Lines()
-	if lines == nil || err != nil {
+	if err != nil {
 		return nil, err
+	}
+	if lines == nil {
+		return nil, fmt.Errorf("unable to load error source %q", src.File)
 	}
 
 	start := (src.Line - 1) - contextPadding
@@ -136,8 +139,6 @@ func sourceContext(src *source) ([]source, error) {
 	return context, nil
 }
 
-// TODO
-//
 // Since this is supposed to be used in development only,
 // instead of returning an error it panics.
 func (e *Error) Render(w io.Writer) {
