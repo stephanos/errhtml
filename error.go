@@ -11,7 +11,7 @@ var (
 	contextPadding = 5
 )
 
-type Error struct {
+type errContext struct {
 	Title, Message string // Description of the error, as presented to the user.
 	Source         *source
 	SourceTrace    []source
@@ -27,7 +27,7 @@ func NewError(err interface{}, sources ...Source) error {
 		return nil
 	}
 
-	if err, ok := err.(*Error); ok {
+	if err, ok := err.(*errContext); ok {
 		return err
 	}
 
@@ -68,7 +68,7 @@ func NewError(err interface{}, sources ...Source) error {
 		}
 	}
 
-	return &Error{
+	return &errContext{
 		Title:         title,
 		Source:        topFrame,
 		Message:       message,
@@ -80,7 +80,7 @@ func NewError(err interface{}, sources ...Source) error {
 
 // Construct a plaintext version of the error, taking account that fields are optionally set.
 // Returns e.g. Compilation Error (in views/header.html:51): expected right delim in end; got "}"
-func (e *Error) Error() string {
+func (e *errContext) Error() string {
 	loc := ""
 	source := e.Source
 	if source.File != "" {
@@ -141,7 +141,7 @@ func sourceContext(src *source) ([]source, error) {
 
 // Since this is supposed to be used in development only,
 // instead of returning an error it panics.
-func (e *Error) Render(w io.Writer) {
+func (e *errContext) Render(w io.Writer) {
 	err := errTemplate.Execute(w, e)
 	if err != nil {
 		panic(err)

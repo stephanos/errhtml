@@ -10,7 +10,7 @@ var _ = Describe("Error", func() {
 	Context("create", func() {
 
 		It("from error", func() {
-			err, _ := NewError(simpleErr()).(*Error)
+			err, _ := NewError(simpleErr()).(*errContext)
 
 			Check(err, NotNil)
 			Check(err.MetaError, IsEmpty)
@@ -22,7 +22,7 @@ var _ = Describe("Error", func() {
 		})
 
 		It("from template error", func() {
-			err, _ := NewError(templateErr(), NewFileSource("fixture_tmpl.html", 5)).(*Error)
+			err, _ := NewError(templateErr(), NewFileSource("fixture_tmpl.html", 5)).(*errContext)
 
 			Check(err, NotNil)
 			Check(err.MetaError, IsEmpty)
@@ -35,7 +35,7 @@ var _ = Describe("Error", func() {
 		})
 
 		It("from panic", func() {
-			err, _ := panicErr().(*Error)
+			err, _ := panicErr().(*errContext)
 
 			Check(err, NotNil)
 			Check(err.MetaError, IsEmpty)
@@ -57,14 +57,15 @@ var _ = Describe("Error", func() {
 		})
 
 		It("from other Error", func() {
-			err1, _ := NewError(simpleErr()).(*Error)
-			err2, _ := NewError(err1).(*Error)
+			err1, _ := NewError(simpleErr()).(*errContext)
+			err2, _ := NewError(err1).(*errContext)
 
 			Check(err1.Message, Equals, err2.Message)
 		})
 
 		It("from template error with missing file", func() {
-			err, _ := NewError(templateErr(), NewFileSource("nonsense.html", 10)).(*Error)
+			err, _ := NewError(templateErr(), NewFileSource("nonsense.html", 10)).(*errContext)
+
 			Check(err, NotNil)
 			Check(err.MetaError, Contains, `unable to load error source "nonsense.html"`)
 		})
@@ -76,24 +77,24 @@ var _ = Describe("Error", func() {
 
 	Context("render", func() {
 
-		render := func(err *Error) string {
+		render := func(err *errContext) string {
 			var buf bytes.Buffer
 			err.Render(&buf)
 			return buf.String()
 		}
 
 		It("an error", func() {
-			err, _ := NewError(simpleErr()).(*Error)
+			err, _ := NewError(simpleErr()).(*errContext)
 			render(err)
 		})
 
 		It("a template error", func() {
-			err, _ := NewError(templateErr(), NewFileSource("fixture_tmpl.html", 5)).(*Error)
+			err, _ := NewError(templateErr(), NewFileSource("fixture_tmpl.html", 5)).(*errContext)
 			render(err)
 		})
 
 		It("a panic", func() {
-			err, _ := NewError(panicErr()).(*Error)
+			err, _ := NewError(panicErr()).(*errContext)
 			render(err)
 		})
 	})
