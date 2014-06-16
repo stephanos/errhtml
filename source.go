@@ -36,6 +36,7 @@ type envConf struct {
 	CurrentDir string
 }
 
+// Source represents the origin of an error.
 type Source struct {
 	source *source
 }
@@ -51,10 +52,12 @@ type fileLocation struct {
 	Root, Package, File string
 }
 
+// NewFileSource creates a new error source from a file path and line.
 func NewFileSource(filePath string, line int) Source {
 	return Source{&source{File: filePath, Line: line}}
 }
 
+// NewTextSource creates a new error source from a text.
 func NewTextSource(text string) Source {
 	return Source{&source{Text: text}}
 }

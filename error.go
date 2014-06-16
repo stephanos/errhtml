@@ -12,16 +12,15 @@ var (
 )
 
 type errContext struct {
-	Title, Message string // Description of the error, as presented to the user.
+	Title, Message string
 	Source         *source
 	SourceTrace    []source
 	SourceContext  []source
 	MetaError      string // Error that occurred producing the error page.
 }
 
-// Find the deepest stack from in user code and provide a code listing of
-// that, on the line that eventually triggered the panic.  Returns nil if no
-// relevant stack frame can be found.
+// NewError creates an error that can be rendered to HTML.
+// It receives an error, from a panic or not, and an optional error source.
 func NewError(err interface{}, sources ...Source) error {
 	if err == nil {
 		return nil
@@ -78,8 +77,8 @@ func NewError(err interface{}, sources ...Source) error {
 	}
 }
 
-// Construct a plaintext version of the error, taking account that fields are optionally set.
-// Returns e.g. Compilation Error (in views/header.html:51): expected right delim in end; got "}"
+// Error returns a plaintext version of the error,
+// taking account that some fields are optionally set.
 func (e *errContext) Error() string {
 	loc := ""
 	source := e.Source
@@ -101,7 +100,6 @@ func (e *errContext) Error() string {
 	return fmt.Sprintf("%s%s", header, e.Message)
 }
 
-// Returns a snippet of the source around where the error occurred.
 func sourceContext(src *source) ([]source, error) {
 	if src == nil || src.File == "" {
 		return nil, nil
@@ -139,6 +137,8 @@ func sourceContext(src *source) ([]source, error) {
 	return context, nil
 }
 
+// Render executes the template and writes the HTML to the passed-in writer.
+//
 // Since this is supposed to be used in development only,
 // instead of returning an error it panics.
 func (e *errContext) Render(w io.Writer) {
