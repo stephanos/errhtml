@@ -69,6 +69,14 @@ var _ = Describe("Error", func() {
 			Check(err1.Message, Equals, err2.Message)
 		})
 
+		It("from string", func() {
+			err, _ := NewError("runtime error").(*errContext)
+
+			Check(err, NotNil)
+			Check(err.Title, Equals, "Error")
+			Check(err.Message, Equals, "runtime error")
+		})
+
 		It("from template error with missing file", func() {
 			err, _ := NewError(templateErr(), NewFileSource("nonsense.html", 10)).(*errContext)
 
@@ -83,15 +91,14 @@ var _ = Describe("Error", func() {
 
 	Context("render", func() {
 
-		render := func(err *errContext) string {
+		render := func(err interface{}) string {
 			var buf bytes.Buffer
-			err.Render(&buf)
+			Render(err, &buf)
 			return buf.String()
 		}
 
 		It("an error", func() {
-			err, _ := NewError(simpleErr()).(*errContext)
-			render(err)
+			render(simpleErr())
 		})
 
 		It("a template error", func() {
@@ -100,8 +107,11 @@ var _ = Describe("Error", func() {
 		})
 
 		It("a panic", func() {
-			err, _ := NewError(panicErr()).(*errContext)
-			render(err)
+			render(panicErr())
+		})
+
+		It("a string", func() {
+			render("runtime error")
 		})
 	})
 })

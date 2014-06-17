@@ -77,6 +77,27 @@ func NewError(err interface{}, sources ...Source) error {
 	}
 }
 
+// Render executes the template and writes the HTML to the passed-in writer.
+//
+// Since this is supposed to be used in development only,
+// instead of returning an error it panics.
+func (e *errContext) Render(w io.Writer) {
+	err := errTemplate.Execute(w, e)
+	if err != nil {
+		panic(fmt.Errorf("errhtml: %q", err))
+	}
+}
+
+// Render creates an error context from the passed-in error and
+// renders it to the passed-in writer.
+func Render(err interface{}, w io.Writer) {
+	errCtx := NewError(err).(*errContext)
+	if errCtx == nil {
+		panic(fmt.Errorf("errhtml: unable to render err %q to HTML", err))
+	}
+	errCtx.Render(w)
+}
+
 // Error returns a plaintext version of the error,
 // taking account that some fields are optionally set.
 func (e *errContext) Error() string {
@@ -135,17 +156,6 @@ func sourceContext(src *source) ([]source, error) {
 	}
 
 	return context, nil
-}
-
-// Render executes the template and writes the HTML to the passed-in writer.
-//
-// Since this is supposed to be used in development only,
-// instead of returning an error it panics.
-func (e *errContext) Render(w io.Writer) {
-	err := errTemplate.Execute(w, e)
-	if err != nil {
-		panic(err)
-	}
 }
 
 func getStackTrace() (stackTrace []source) {
