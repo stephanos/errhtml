@@ -14,9 +14,23 @@ var _ = Describe("Source", func() {
 		cwd = "/Users/gopher/workspace/src/host/vendor/library"
 	})
 
-	It("return file name", func() {
-		src := source{File: absFile("file.go")}
-		Check(src.FileName(), Equals, "file.go")
+	Context("create", func() {
+		It("from file", func() {
+			src := NewFileSource("directory/file.go", 42).source
+
+			Check(src.Line, Equals, 42)
+			Check(src.File, Equals, "directory/file.go")
+
+			Check(src.FileName(), Equals, "file.go")
+			Check(src.AbbreviatedFilePath(), Equals, "directory/file.go")
+			Check(src.AbbreviatedFilePathDirectories(), Equals, []string{"directory"})
+		})
+
+		It("from text", func() {
+			src := NewTextSource("err").source
+
+			Check(src.Text, Equals, "err")
+		})
 	})
 
 	Context("return file location when", func() {
