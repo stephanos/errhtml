@@ -3,20 +3,19 @@ errhtml [![Build Status](https://secure.travis-ci.org/101loops/errhtml.png)](htt
 
 This Go package can render runtime errors/panics to HTML. Useful during development.
 
-### Examples
 
+## Examples
 ![panic](https://github.com/101loops/errhtml/raw/gh-pages/screenshot1.png)
-
 ![template error](https://github.com/101loops/errhtml/raw/gh-pages/screenshot2.png)
 
-### Installation
+## Installation
 `go get github.com/101loops/errhtml`
 
-### Documentation
+## Documentation
 [godoc.org](http://godoc.org/github.com/101loops/errhtml)
 
-### License
-MIT (see LICENSE).
-
-### Credits
+## Credits
 Most of the code/template from the [Revel framework](https://github.com/revel).
+
+## License
+MIT (see LICENSE).
