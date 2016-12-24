@@ -5,8 +5,8 @@ This Go package can render runtime errors/panics to HTML. Useful during developm
 
 
 ## Examples
-![panic](https://github.com/101loops/errhtml/raw/gh-pages/screenshot1.png)
-![template error](https://github.com/101loops/errhtml/raw/gh-pages/screenshot2.png)
+![panic](https://github.com/stephanos/errhtml/raw/gh-pages/screenshot1.png)
+![template error](https://github.com/stephanos/errhtml/raw/gh-pages/screenshot2.png)
 
 ## Install
 ```bash
